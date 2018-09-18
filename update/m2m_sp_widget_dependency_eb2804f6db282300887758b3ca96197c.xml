@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="m2m_sp_widget_dependency">
+    <m2m_sp_widget_dependency action="INSERT_OR_UPDATE">
+        <sp_dependency display_value="SN Filter">d7ce11589301220064f572edb67ffb52</sp_dependency>
+        <sp_widget display_value="V2 SN Filter Widget Modal">e72804f6db282300887758b3ca96197a</sp_widget>
+        <sys_class_name>m2m_sp_widget_dependency</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-09-18 04:46:35</sys_created_on>
+        <sys_id>eb2804f6db282300887758b3ca96197c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>SN Filter.Copy of SN Filter Widget Modal</sys_name>
+        <sys_package display_value="EUTS Intake" source="x_17940_euts_intak">499d7faedbe42300887758b3ca9619f6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="EUTS Intake">499d7faedbe42300887758b3ca9619f6</sys_scope>
+        <sys_update_name>m2m_sp_widget_dependency_eb2804f6db282300887758b3ca96197c</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-09-18 04:46:35</sys_updated_on>
+    </m2m_sp_widget_dependency>
+</record_update>

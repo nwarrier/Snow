@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sp_rel_widget_clone">
+    <sp_rel_widget_clone action="INSERT_OR_UPDATE">
+        <child display_value="EUTS Filter Component">b2c690b6db682300887758b3ca961972</child>
+        <cloned>2018-09-18 05:50:26</cloned>
+        <last_validated>2018-09-18 05:50:26</last_validated>
+        <parent display_value="PPS Filter Component">b197e6dc9301220064f572edb67ffb80</parent>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;sp_widget&gt;&lt;category/&gt;&lt;client_script&gt;&lt;![CDATA[function($scope, $rootScope, spUtil) {
+	var c = this;
+	var modalCtrl;
+	
+	var filterModal = c.data.filterModal;
+	filterModal.options.afterOpen = function(ctrl) {
+		modalCtrl = ctrl;
+	};
+
+	$scope.editFilter = function() {
+		filterModal.data.config.encodedQuery = c.data.query;
+		if (!c.data.query || c.data.query == "")
+			filterModal.data.config.queryObj = null;
+		c.filterModal = filterModal;
+	};
+
+	$scope.$on('sp.widget-modal.closed', clearModal);
+	$scope.$on('pps:snfilter_updated', queryUpdated);
+	$scope.$on('widget-filter-breadcrumbs.queryModified', breadcrumbModified);
+	
+	function breadcrumbModified(e, query) {
+		refreshBreadcrumbs(query, c.data.table);
+		c.data.query = query;
+		$scope.$emit('pps:snfilter_updated', query, c.data.table);
+	}	
+	
+	function queryUpdated(e, query, table) {
+		refreshBreadcrumbs(query, table);
+		c.data.query = query;
+		if (modalCtrl)
+			modalCtrl.close();
+	}
+	
+	function refreshBreadcrumbs(query, table) {
+		spUtil.get('widget-filter-breadcrumbs', {table: table, query: query}).then(function(response) {
+			c.data.filterBreadcrumbs = response;
+		});
+	}
+	
+	function clearModal() {
+		c.filterModal = null;
+	}
+}]]&gt;&lt;/client_script&gt;&lt;controller_as&gt;c&lt;/controller_as&gt;&lt;css&gt;.pps-filter-icon{&amp;#13;
+  padding: 0px;&amp;#13;
+  background: none;&amp;#13;
+  float: left;&amp;#13;
+  margin-right: 7px;&amp;#13;
+  font-size: 20px;&amp;#13;
+  &amp;#13;
+  &amp;amp;:hover, &amp;amp;:focus{&amp;#13;
+    text-decoration: none;&amp;#13;
+  }&amp;#13;
+}&amp;#13;
+.breadcrumbs{&amp;#13;
+  line-height:30px;&amp;#13;
+}&lt;/css&gt;&lt;data_table&gt;sp_instance&lt;/data_table&gt;&lt;demo_data/&gt;&lt;description/&gt;&lt;docs/&gt;&lt;field_list/&gt;&lt;has_preview&gt;false&lt;/has_preview&gt;&lt;id&gt;pps-filter&lt;/id&gt;&lt;internal&gt;false&lt;/internal&gt;&lt;link/&gt;&lt;name&gt;PPS Filter Component&lt;/name&gt;&lt;option_schema/&gt;&lt;public&gt;false&lt;/public&gt;&lt;roles/&gt;&lt;script&gt;&lt;![CDATA[(function() {
+	data.title = input.title || options.title;
+	data.okLabel = input.okLabel || options.okLabel;
+	data.cancelLabel = input.cancelLabel || options.cancelLabel;
+	data.filterOptions = input.filterOptions || options.filterOptions;
+	data.table = data.filterOptions.table;
+	data.query = data.filterOptions.config.encodedQuery;
+	var enableFilterIcon = input.enable_filter || options.enable_filter == true || options.enable_filter == 'true';
+	
+	var widgetOptions = {
+		title: data.title,
+		okLabel: data.okLabel,
+		cancelLabel: data.cancelLabel,
+		filterOptions: data.filterOptions
+	};
+
+	data.filterBreadcrumbs = $sp.getWidget('widget-filter-breadcrumbs', {enable_filter: enableFilterIcon, table: data.table, query: data.filterOptions.config.encodedQuery});
+	data.filterModal = $sp.getWidget('pps-sn-filter-modal', widgetOptions);
+})();]]&gt;&lt;/script&gt;&lt;servicenow&gt;false&lt;/servicenow&gt;&lt;sys_class_name&gt;sp_widget&lt;/sys_class_name&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2016-08-01 09:57:54&lt;/sys_created_on&gt;&lt;sys_id&gt;b197e6dc9301220064f572edb67ffb80&lt;/sys_id&gt;&lt;sys_mod_count&gt;72&lt;/sys_mod_count&gt;&lt;sys_name&gt;PPS Filter Component&lt;/sys_name&gt;&lt;sys_package display_value="Project Portfolio Suite Portal Commons" source="com.snc.pps_portal_common"&gt;72832659db331300887758b3ca961980&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_scope display_value="Global"&gt;global&lt;/sys_scope&gt;&lt;sys_update_name&gt;sp_widget_b197e6dc9301220064f572edb67ffb80&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2017-02-06 15:26:28&lt;/sys_updated_on&gt;&lt;template&gt;&lt;![CDATA[&lt;div&gt;
+    &lt;div&gt;
+        &lt;button ng-click="editFilter()" class="icon-filter pps-filter-icon btn btn-link" tabindex="0"&gt;
+          &lt;span class="sr-only"&gt;${Show / Hide filter}&lt;/span&gt;	
+      	&lt;/button&gt;
+      	&lt;sp-widget widget="data.filterBreadcrumbs"&gt;&lt;/sp-widget&gt;
+      	&lt;div style="clear:both"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;sp-widget widget="c.filterModal" ng-if="c.filterModal"&gt;&lt;/sp-widget&gt;
+&lt;/div&gt;]]&gt;&lt;/template&gt;&lt;/sp_widget&gt;</payload>
+        <sys_class_name>sp_rel_widget_clone</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-09-18 05:50:26</sys_created_on>
+        <sys_id>f2c690b6db682300887758b3ca961975</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>b2c690b6db682300887758b3ca961972</sys_name>
+        <sys_package display_value="EUTS Intake" source="x_17940_euts_intak">499d7faedbe42300887758b3ca9619f6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="EUTS Intake">499d7faedbe42300887758b3ca9619f6</sys_scope>
+        <sys_update_name>sp_rel_widget_clone_f2c690b6db682300887758b3ca961975</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-09-18 05:50:26</sys_updated_on>
+    </sp_rel_widget_clone>
+</record_update>

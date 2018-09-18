@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sp_rel_widget_clone">
+    <sp_rel_widget_clone action="INSERT_OR_UPDATE">
+        <child display_value="V2 SN Filter Widget Modal">e72804f6db282300887758b3ca96197a</child>
+        <cloned>2018-09-18 04:46:35</cloned>
+        <last_validated>2018-09-18 04:46:35</last_validated>
+        <parent display_value="SN Filter Widget Modal">1010df8193c1220064f572edb67ffbde</parent>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;sp_widget&gt;&lt;category/&gt;&lt;client_script&gt;&lt;![CDATA[function($scope, snFilterInstanceStore) {
+	var c = this;
+	var filterChanged = false;
+	$scope.query = c.data.config.encodedQuery;
+	$scope.$on('snfilter:update_query', queryUpdated);
+	
+	function queryUpdated(e, query, table) {
+		filterChanged = true;
+		$scope.query = query;
+	}
+	
+	$scope.ok = function() {
+		if (filterChanged) {
+			$scope.$emit('pps:snfilter_updated', $scope.query, c.data.table);
+			var filterId = snFilterInstanceStore.create(c.data.table, null);
+			var filterInstance = snFilterInstanceStore.get(filterId);
+			filterInstance.initialize($scope.query, c.data.table).then(function(){
+				c.data.config.queryObj = filterInstance.buildQueryObject();
+			});
+		}
+		else
+			$scope.cancel();
+	};
+}]]&gt;&lt;/client_script&gt;&lt;controller_as&gt;c&lt;/controller_as&gt;&lt;css&gt;.popover-content {&amp;#13;
+  overflow-x: hidden;&amp;#13;
+}&amp;#13;
+&amp;#13;
+.ng-filter-widget-row {&amp;#13;
+  padding-right: 0px !important;&amp;#13;
+}&amp;#13;
+.input-group-transparent {&amp;#13;
+  position: relative;&amp;#13;
+}&amp;#13;
+.input-group-addon-transparent {&amp;#13;
+    position: absolute;&amp;#13;
+    left: 6px;&amp;#13;
+    width: 22px;&amp;#13;
+    z-index: 3;&amp;#13;
+    font-size: 18px;&amp;#13;
+}&amp;#13;
+.input-group-transparent .input-group-addon-transparent ~ input {&amp;#13;
+    padding-left: 28px;&amp;#13;
+}&amp;#13;
+.form-control-search {&amp;#13;
+    border-radius: 9999px;&amp;#13;
+}&amp;#13;
+&amp;#13;
+ul {&amp;#13;
+  padding-left: 0px !important;&amp;#13;
+  overflow-x: hidden;&amp;#13;
+  margin: 0px;&amp;#13;
+}&amp;#13;
+.filter-fields-list-popover .filter-fields-list .filter-field-sets-container ul li a {&amp;#13;
+    font-size: 13px;&amp;#13;
+    font-weight: normal;&amp;#13;
+}&amp;#13;
+.filter-fields-list-popover .filter-fields-list .filter-field-sets-container ul li a:focus ~ .btn.btn-icon .selected-icon {&amp;#13;
+    color: white;&amp;#13;
+    display: block;&amp;#13;
+}&amp;#13;
+.filter-fields-list-popover .filter-fields-list .filter-field-sets-container ul li .btn .btn-icon {&amp;#13;
+    top: 0;&amp;#13;
+    right: 0;&amp;#13;
+    position: absolute;&amp;#13;
+    height: 28px;&amp;#13;
+    width: 28px;&amp;#13;
+    background-color: transparent;&amp;#13;
+    border-radius: 0;&amp;#13;
+    font-size: 16px;&amp;#13;
+}&amp;#13;
+.add-dot-walk-list {&amp;#13;
+  padding: 0px !important;&amp;#13;
+}&amp;#13;
+.icon-chevron-right-circle {&amp;#13;
+  line-height: 0;&amp;#13;
+}&amp;#13;
+.icon-chevron-right-circle-solid {&amp;#13;
+  line-height: 0;&amp;#13;
+}&amp;#13;
+&amp;#13;
+[class ^= "icon-"]: before, [class *= "icon-"]: before {&amp;#13;
+    display: inline-block;&amp;#13;
+    vertical-align: middle;&amp;#13;
+    line-height: 1;&amp;#13;
+    font-weight: normal;&amp;#13;
+    font-style: normal;&amp;#13;
+    speak: none;&amp;#13;
+    text-decoration: inherit;&amp;#13;
+    text-transform: none;&amp;#13;
+    text-rendering: optimizeLegibility;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;&amp;#13;
+}&amp;#13;
+&lt;/css&gt;&lt;data_table&gt;sp_instance&lt;/data_table&gt;&lt;demo_data/&gt;&lt;description/&gt;&lt;docs/&gt;&lt;field_list/&gt;&lt;has_preview&gt;false&lt;/has_preview&gt;&lt;id&gt;pps-sn-filter-modal&lt;/id&gt;&lt;internal&gt;false&lt;/internal&gt;&lt;link&gt;&lt;![CDATA[function(scope, element, attrs, ctrl){
+	if (!scope.data || !scope.options)
+		return;
+
+	var $rootScope = $injector.get('$rootScope');
+	var $uibModal = $injector.get('$uibModal');
+	var opts = {
+		size : 'lg',
+		scope: $rootScope.$new(false, scope),
+		template : element,
+		controller : function($scope, $uibModalInstance){
+			$scope.cancel = function () {
+				$uibModalInstance.dismiss('cancel');
+			};
+			$scope.close = function () {
+				$uibModalInstance.close('Close');
+			};
+			$scope.data = scope.data;
+		}
+	};
+
+	if (scope.options.modalBodyClass)
+		element.addClass(scope.options.modalBodyClass);
+
+	if (scope.options.beforeRender)
+		scope.options.beforeRender.call(null, scope.data.instance.data);
+
+	var modalInstance = $uibModal.open(opts);
+
+	if (scope.options.afterOpen)
+		scope.options.afterOpen.call(null, modalController(modalInstance));
+
+	if (scope.options.afterClose)
+		modalInstance.closed.then(scope.options.afterClose);
+
+	modalInstance.closed.then(function(){
+		scope.$emit('sp.widget-modal.closed');
+	});
+	
+	function modalController(instance){
+		return {
+			close: function(){
+				instance.close();
+			}
+		};
+	}
+
+}]]&gt;&lt;/link&gt;&lt;name&gt;SN Filter Widget Modal&lt;/name&gt;&lt;option_schema/&gt;&lt;public&gt;false&lt;/public&gt;&lt;roles/&gt;&lt;script&gt;&lt;![CDATA[(function(){
+	var filterOptions = options.filterOptions || input.filterOptions;
+	data.title = options.title || input.title || gs.getMessage('Set filter');
+	data.okLabel = options.okLabel || input.okLabel || gs.getMessage('OK');
+	data.cancelLabel = options.cancelLabel || input.cancelLabel || gs.getMessage('Cancel');
+	data.table = filterOptions.table;
+	data.config = filterOptions.config;
+})();]]&gt;&lt;/script&gt;&lt;servicenow&gt;false&lt;/servicenow&gt;&lt;sys_class_name&gt;sp_widget&lt;/sys_class_name&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2016-08-03 20:47:27&lt;/sys_created_on&gt;&lt;sys_id&gt;1010df8193c1220064f572edb67ffbde&lt;/sys_id&gt;&lt;sys_mod_count&gt;150&lt;/sys_mod_count&gt;&lt;sys_name&gt;SN Filter Widget Modal&lt;/sys_name&gt;&lt;sys_package display_value="Project Portfolio Suite Portal Commons" source="com.snc.pps_portal_common"&gt;72832659db331300887758b3ca961980&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_scope display_value="Global"&gt;global&lt;/sys_scope&gt;&lt;sys_update_name&gt;sp_widget_1010df8193c1220064f572edb67ffbde&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2017-06-21 17:19:33&lt;/sys_updated_on&gt;&lt;template&gt;&lt;![CDATA[&lt;header class="modal-header"&gt;
+  	&lt;button class="btn-icon close icon-cross" ng-click="cancel()"&gt;&lt;span class="sr-only"&gt;${Close}&lt;/span&gt;&lt;/button&gt;
+    &lt;h4 class="modal-title"&gt;{{::data.title}}&lt;/h4&gt;
+  	&lt;div style="clear:both"&gt;&lt;/div&gt;
+&lt;/header&gt;
+&lt;div class="modal-body" style="padding:0px"&gt;
+	&lt;sn-filter-widget table="{{data.table}}" filter-config="c.data.config"&gt;&lt;/sn-filter-widget&gt;
+    &lt;div style="clear:both"&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="modal-footer"&gt;
+    &lt;button class="btn btn-default" type="button" ng-click="cancel()"&gt;{{::data.cancelLabel}}&lt;/button&gt;
+    &lt;button class="btn btn-primary" type="button" ng-click="ok()"&gt;{{::data.okLabel}}&lt;/button&gt;
+&lt;/div&gt;]]&gt;&lt;/template&gt;&lt;/sp_widget&gt;</payload>
+        <sys_class_name>sp_rel_widget_clone</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-09-18 04:46:35</sys_created_on>
+        <sys_id>6b2804f6db282300887758b3ca96197f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>e72804f6db282300887758b3ca96197a</sys_name>
+        <sys_package display_value="EUTS Intake" source="x_17940_euts_intak">499d7faedbe42300887758b3ca9619f6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="EUTS Intake">499d7faedbe42300887758b3ca9619f6</sys_scope>
+        <sys_update_name>sp_rel_widget_clone_6b2804f6db282300887758b3ca96197f</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-09-18 04:46:35</sys_updated_on>
+    </sp_rel_widget_clone>
+</record_update>

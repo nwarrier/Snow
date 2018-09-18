@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>standard</category>
+        <client_script><![CDATA[function ($scope, $timeout){
+	var eventNames = {
+		setBreadcrumbs: 'euts-filter-breadcrumbs.setBreadcrumbs'
+	};
+
+	$scope.adjustFilter = function(breadcrumb, remove){
+		var newQuery = remove ? breadcrumb.ifRemoved : breadcrumb.value;
+		$scope.$emit('euts-filter-breadcrumbs.queryModified', newQuery);
+	}
+
+	$scope.$on(eventNames.setBreadcrumbs, function(e, data, newQuery){
+		$scope.data = data;
+		$scope.$broadcast("snfilter:initialize_query", massageEncodedQuery(newQuery));
+	});
+
+	$scope.clickFilter = function() {
+		$scope.showFilter = !$scope.showFilter;
+	}
+
+	$scope.showFilter = false;
+	$scope.$on("snbreadcrumbs:toggle_filter", function(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		$scope.showFilter = false;
+	});
+
+	$scope.$on("snfilter:update_query", function(e, query) {
+		e.stopPropagation();
+		e.preventDefault();
+		$scope.$emit('euts-filter-breadcrumbs.queryModified', massageEncodedQuery(query));
+		$scope.showFilter = false;
+	});
+
+	function massageEncodedQuery(query) {
+		return (query) ? query.replace(/CONTAINS/g, "LIKE").replace(/DOES NOT CONTAIN/g, "NOT LIKE") : query;
+	}
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.breadcrumbs {
+  margin-left: 9px;
+  margin-bottom: 3px;
+}
+
+.icon-filter {
+  font-size: 20px;
+  text-decoration: inherit; /* no underline */
+}
+
+.ng-filter-widget {
+  .modal {
+    .manage-filters-button {
+      top: 15px;
+    }
+
+    .input-group-radio {
+      input {
+        margin-left: 0;
+      }
+    }
+
+    .input-group-transparent {
+      position: relative;
+
+      .input-group-addon-transparent {
+        position: absolute;
+        font-size: 18px;
+        top: 2px;
+        left: 8px;
+      }
+
+      input {
+        border-radius: 9999px;
+        padding-left: 28px;
+      }
+    }
+
+    ul {
+      padding: 0 5px 10px;
+
+      li {
+        button {
+          background-color: inherit;
+        }
+
+        a {
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          display: block;
+          padding: 7px 20px;
+          text-decoration: none;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>euts-filter-breadcrumbs</id>
+        <internal>false</internal>
+        <link/>
+        <name>EUTS Filter Breadcrumbs</name>
+        <option_schema>[{"hint":"Table to be used to generate breadcrumbs","name":"table","section":"Data","label":"Table","type":"string"},{"name":"query","section":"Data","label":"Query","type":"string"},{"hint":"If enabled, a filter button prompt will be added to the breadcrumb list","name":"enable_filter","default_value":"false","section":"Behavior","label":"Enable Filter","type":"boolean"}]</option_schema>
+        <public>true</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	var table;
+	var query;
+	if(input){
+	 table = input.table;
+	 query = input.query;	
+		data.enable_filter = input.enable_filter ;
+	}else if(options){
+		 table = options.table;
+		 query = options.query;
+		data.enable_filter = options.enable_filter == true || options.enable_filter == "true";
+	}
+	
+	data.breadcrumbs = $sp.getFilterBreadcrumbs(table, query, null);
+
+	if (data.enable_filter)
+		data.filterWidget = $sp.getWidget('euts-sn-desktop-filter', {
+			table: table
+		});
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-09-18 07:51:40</sys_created_on>
+        <sys_id>3682b4bedba82300887758b3ca961974</sys_id>
+        <sys_mod_count>12</sys_mod_count>
+        <sys_name>EUTS Filter Breadcrumbs</sys_name>
+        <sys_package display_value="EUTS Intake" source="x_17940_euts_intak">499d7faedbe42300887758b3ca9619f6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="EUTS Intake">499d7faedbe42300887758b3ca9619f6</sys_scope>
+        <sys_update_name>sp_widget_3682b4bedba82300887758b3ca961974</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-09-18 20:44:25</sys_updated_on>
+        <template><![CDATA[<div class="breadcrumbs">
+  <button type="button"
+          role="button"
+          ng-show="data.enable_filter"
+          ng-click="clickFilter()"
+          title="Show / hide filter"
+          class="icon-filter btn btn-link"
+          tabindex="0"
+          data-original-title="Show / hide filter"><span class="sr-only">${Show / hide filter}ssss</span></button>
+  <span ng-repeat="crumb in data.breadcrumbs track by crumb.value">
+    <a href="javascript:void(0)" ng-if="!$first" class="sp-breadcrumb-link sp-breadcrumb-remove-condition" ng-click="adjustFilter(crumb, true)">&gt;</a>
+    <a href="javascript:void(0)" class="sp-breadcrumb-link" ng-click="adjustFilter(crumb, false)">{{crumb.label}}</a>
+  </span>
+</div>
+
+<div ng-if="data.enable_filter">
+  <span ng-show="showFilter">
+    <sp-widget widget="data.filterWidget"></sp-widget>
+  </span>
+</div>
+]]></template>
+    </sp_widget>
+</record_update>

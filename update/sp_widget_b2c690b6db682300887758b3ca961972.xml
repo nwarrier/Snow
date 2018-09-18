@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[function($scope, $rootScope, spUtil) {
+	var c = this;
+	var modalCtrl;
+	
+	var filterModal = c.data.filterModal;
+	filterModal.options.afterOpen = function(ctrl) {
+		modalCtrl = ctrl;
+	};
+
+	$scope.editFilter = function() {
+		filterModal.data.config.encodedQuery = c.data.query;
+		if (!c.data.query || c.data.query == "")
+			filterModal.data.config.queryObj = null;
+		c.filterModal = filterModal;
+	};
+
+	$scope.$on('sp.widget-modal.closed', clearModal);
+	$scope.$on('euts:snfilter_updated', queryUpdated);
+	$scope.$on('euts-filter-breadcrumbs.queryModified', breadcrumbModified);
+	
+	function breadcrumbModified(e, query) {
+		refreshBreadcrumbs(query, c.data.table);
+		c.data.query = query;
+		$scope.$emit('euts:snfilter_updated', query, c.data.table);
+	}	
+	
+	function queryUpdated(e, query, table) {
+		refreshBreadcrumbs(query, table);
+		c.data.query = query;
+		if (modalCtrl)
+			modalCtrl.close();
+	}
+	
+	function refreshBreadcrumbs(query, table) {
+		spUtil.get('euts-filter-breadcrumbs', {table: table, query: query}).then(function(response) {
+			c.data.filterBreadcrumbs = response;
+		});
+	}
+	
+	function clearModal() {
+		c.filterModal = null;
+	}
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.pps-filter-icon{&#13;
+  padding: 0px;&#13;
+  background: none;&#13;
+  float: left;&#13;
+  margin-right: 7px;&#13;
+  font-size: 20px;&#13;
+  &#13;
+  &amp;:hover, &amp;:focus{&#13;
+    text-decoration: none;&#13;
+  }&#13;
+}&#13;
+.breadcrumbs{&#13;
+  line-height:30px;&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>euts-filter-again</id>
+        <internal>false</internal>
+        <link/>
+        <name>EUTS Filter Component</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	var enableFilterIcon = false;
+		
+
+	if(input){
+		data.title = input.title;
+		data.okLabel = input.okLabel;
+		data.cancelLabel = input.cancelLabel;
+		data.filterOptions = input.filterOptions;
+		enableFilterIcon = input.enable_filter ;
+	}else if(options){
+		data.title = options.title;
+		data.okLabel = options.okLabel;
+		data.cancelLabel = options.cancelLabel;
+		data.filterOptions = options.filterOptions;
+		enableFilterIcon= options.enable_filter == true || options.enable_filter == 'true';
+	}
+	
+
+	data.table = data.filterOptions.table;
+	data.query = data.filterOptions.config.encodedQuery;
+	
+	var widgetOptions = {
+		title: data.title,
+		okLabel: data.okLabel,
+		cancelLabel: data.cancelLabel,
+		filterOptions: data.filterOptions
+	};
+
+	data.filterBreadcrumbs = $sp.getWidget('euts-filter-breadcrumbs', {enable_filter: enableFilterIcon, table: data.table, query: data.filterOptions.config.encodedQuery});
+	data.filterModal = $sp.getWidget('euts-filter-widget-modal-v2', widgetOptions);
+	
+	console.log('enableFilterIcon ' + enableFilterIcon);
+	
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-09-18 05:50:26</sys_created_on>
+        <sys_id>b2c690b6db682300887758b3ca961972</sys_id>
+        <sys_mod_count>24</sys_mod_count>
+        <sys_name>EUTS Filter Component</sys_name>
+        <sys_package display_value="EUTS Intake" source="x_17940_euts_intak">499d7faedbe42300887758b3ca9619f6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="EUTS Intake">499d7faedbe42300887758b3ca9619f6</sys_scope>
+        <sys_update_name>sp_widget_b2c690b6db682300887758b3ca961972</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-09-18 20:46:57</sys_updated_on>
+        <template><![CDATA[<div>
+    <div>
+      <!--
+        <button ng-click="editFilter()" class="icon-filter pps-filter-icon btn btn-link" tabindex="0">
+          <span class="sr-only">${Show / Hide filter}</span>	
+      	</button>
+	-->
+      	<sp-widget widget="data.filterBreadcrumbs"></sp-widget>
+      	<div style="clear:both"></div>
+    </div>
+    <sp-widget widget="c.filterModal" ng-if="c.filterModal"></sp-widget>
+</div>]]></template>
+    </sp_widget>
+</record_update>

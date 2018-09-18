@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sp_instance">
+    <sp_instance action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <class_name/>
+        <color>default</color>
+        <css/>
+        <glyph/>
+        <id/>
+        <order>1</order>
+        <roles/>
+        <short_description/>
+        <size>md</size>
+        <sp_column display_value="1">e368e876dba82300887758b3ca9619b4</sp_column>
+        <sp_widget display_value="V2 Data table with Filter">176204f2db282300887758b3ca9619e7</sp_widget>
+        <sys_class_name>sp_instance</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-09-18 07:15:49</sys_created_on>
+        <sys_id>a15aacf6dba82300887758b3ca9619f4</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_name>MyRequest</sys_name>
+        <sys_package display_value="EUTS Intake" source="x_17940_euts_intak">499d7faedbe42300887758b3ca9619f6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="EUTS Intake">499d7faedbe42300887758b3ca9619f6</sys_scope>
+        <sys_update_name>sp_instance_a15aacf6dba82300887758b3ca9619f4</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-09-18 20:53:19</sys_updated_on>
+        <title>MyRequest</title>
+        <url/>
+        <widget_parameters><![CDATA[{
+	"title": {
+		"value": "MyRequest",
+		"displayValue": "MyRequest"
+	},
+	"table": {
+		"value": "incident",
+		"displayValue": "incident"
+	},
+	"filter": {
+		"value": "active=true",
+		"displayValue": "active=true"
+	},"enable_filter": {
+		"value": true,
+		"displayValue": "true"
+	},"show_breadcrumbs": {
+		"value": true,
+		"displayValue": "true"
+	},"show_keywords": {
+		"value": true,
+		"displayValue": "true"
+	}
+}]]></widget_parameters>
+    </sp_instance>
+    <sys_translated_text action="delete_multiple" query="documentkey=a15aacf6dba82300887758b3ca9619f4"/>
+</record_update>

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[function($scope, snFilterInstanceStore) {
+	var c = this;
+	var filterChanged = false;
+	$scope.query = c.data.config.encodedQuery;
+	$scope.$on('snfilter:update_query', queryUpdated);
+	
+	function queryUpdated(e, query, table) {
+		filterChanged = true;
+		$scope.query = query;
+	}
+	
+	$scope.ok = function() {
+		if (filterChanged) {
+			$scope.$emit('euts:snfilter_updated', $scope.query, c.data.table);
+			var filterId = snFilterInstanceStore.create(c.data.table, null);
+			var filterInstance = snFilterInstanceStore.get(filterId);
+			filterInstance.initialize($scope.query, c.data.table).then(function(){
+				c.data.config.queryObj = filterInstance.buildQueryObject();
+			});
+		}
+		else
+			$scope.cancel();
+	};
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.popover-content {&#13;
+  overflow-x: hidden;&#13;
+}&#13;
+&#13;
+.ng-filter-widget-row {&#13;
+  padding-right: 0px !important;&#13;
+}&#13;
+.input-group-transparent {&#13;
+  position: relative;&#13;
+}&#13;
+.input-group-addon-transparent {&#13;
+    position: absolute;&#13;
+    left: 6px;&#13;
+    width: 22px;&#13;
+    z-index: 3;&#13;
+    font-size: 18px;&#13;
+}&#13;
+.input-group-transparent .input-group-addon-transparent ~ input {&#13;
+    padding-left: 28px;&#13;
+}&#13;
+.form-control-search {&#13;
+    border-radius: 9999px;&#13;
+}&#13;
+&#13;
+ul {&#13;
+  padding-left: 0px !important;&#13;
+  overflow-x: hidden;&#13;
+  margin: 0px;&#13;
+}&#13;
+.filter-fields-list-popover .filter-fields-list .filter-field-sets-container ul li a {&#13;
+    font-size: 13px;&#13;
+    font-weight: normal;&#13;
+}&#13;
+.filter-fields-list-popover .filter-fields-list .filter-field-sets-container ul li a:focus ~ .btn.btn-icon .selected-icon {&#13;
+    color: white;&#13;
+    display: block;&#13;
+}&#13;
+.filter-fields-list-popover .filter-fields-list .filter-field-sets-container ul li .btn .btn-icon {&#13;
+    top: 0;&#13;
+    right: 0;&#13;
+    position: absolute;&#13;
+    height: 28px;&#13;
+    width: 28px;&#13;
+    background-color: transparent;&#13;
+    border-radius: 0;&#13;
+    font-size: 16px;&#13;
+}&#13;
+.add-dot-walk-list {&#13;
+  padding: 0px !important;&#13;
+}&#13;
+.icon-chevron-right-circle {&#13;
+  line-height: 0;&#13;
+}&#13;
+.icon-chevron-right-circle-solid {&#13;
+  line-height: 0;&#13;
+}&#13;
+&#13;
+[class ^= "icon-"]: before, [class *= "icon-"]: before {&#13;
+    display: inline-block;&#13;
+    vertical-align: middle;&#13;
+    line-height: 1;&#13;
+    font-weight: normal;&#13;
+    font-style: normal;&#13;
+    speak: none;&#13;
+    text-decoration: inherit;&#13;
+    text-transform: none;&#13;
+    text-rendering: optimizeLegibility;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;&#13;
+}&#13;
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>euts-filter-widget-modal-v2</id>
+        <internal>false</internal>
+        <link><![CDATA[function(scope, element, attrs, ctrl){
+	if (!scope.data || !scope.options)
+		return;
+
+	var $rootScope = $injector.get('$rootScope');
+	var $uibModal = $injector.get('$uibModal');
+	var opts = {
+		size : 'lg',
+		scope: $rootScope.$new(false, scope),
+		template : element,
+		controller : function($scope, $uibModalInstance){
+			$scope.cancel = function () {
+				$uibModalInstance.dismiss('cancel');
+			};
+			$scope.close = function () {
+				$uibModalInstance.close('Close');
+			};
+			$scope.data = scope.data;
+		}
+	};
+
+	if (scope.options.modalBodyClass)
+		element.addClass(scope.options.modalBodyClass);
+
+	if (scope.options.beforeRender)
+		scope.options.beforeRender.call(null, scope.data.instance.data);
+
+	var modalInstance = $uibModal.open(opts);
+
+	if (scope.options.afterOpen)
+		scope.options.afterOpen.call(null, modalController(modalInstance));
+
+	if (scope.options.afterClose)
+		modalInstance.closed.then(scope.options.afterClose);
+
+	modalInstance.closed.then(function(){
+		scope.$emit('sp.widget-modal.closed');
+	});
+	
+	function modalController(instance){
+		return {
+			close: function(){
+				instance.close();
+			}
+		};
+	}
+
+}]]></link>
+        <name>V2 Filter Widget Modal</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function(){
+	var filterOptions = options.filterOptions || input.filterOptions;
+	data.title = options.title || input.title || gs.getMessage('Set filter');
+	data.okLabel = options.okLabel || input.okLabel || gs.getMessage('OK');
+	data.cancelLabel = options.cancelLabel || input.cancelLabel || gs.getMessage('Cancel');
+	data.table = filterOptions.table;
+	data.config = filterOptions.config;
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-09-18 07:37:56</sys_created_on>
+        <sys_id>e56fa07edba82300887758b3ca96191e</sys_id>
+        <sys_mod_count>7</sys_mod_count>
+        <sys_name>V2 Filter Widget Modal</sys_name>
+        <sys_package display_value="EUTS Intake" source="x_17940_euts_intak">499d7faedbe42300887758b3ca9619f6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="EUTS Intake">499d7faedbe42300887758b3ca9619f6</sys_scope>
+        <sys_update_name>sp_widget_e56fa07edba82300887758b3ca96191e</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-09-18 19:43:06</sys_updated_on>
+        <template><![CDATA[<header class="modal-header">
+  	<button class="btn-icon close icon-cross" ng-click="cancel()"><span class="sr-only">${Close}</span></button>
+    <h4 class="modal-title">{{::data.title}}</h4>
+  	<div style="clear:both"></div>
+</header>
+<div class="modal-body" style="padding:0px">
+	<sn-filter-widget table="{{data.table}}" filter-config="c.data.config"></sn-filter-widget>
+    <div style="clear:both"></div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" type="button" ng-click="cancel()">{{::data.cancelLabel}}</button>
+    <button class="btn btn-primary" type="button" ng-click="ok()">{{::data.okLabel}}</button>
+</div>
+]]></template>
+    </sp_widget>
+</record_update>
